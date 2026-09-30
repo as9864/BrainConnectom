@@ -113,5 +113,5 @@ data_sources/
 docs/
   ARCHITECTURE.md    - 아키텍처와 각 구성요소에 대한 상세 설명
   proposal.docx      - 실험 3(sc_prior_experiment)의 연구 제안서
-  papers/            - 관련 논문 해설 (번역이 아닌, 읽고 재구성한 요약)
+  papers/            - 관련 논문 해설 (번역이 아닌, 읽고 재구성한 요약) + READING_LIST.md(배경 논문 읽기 목록)
 ```
