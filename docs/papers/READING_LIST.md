@@ -59,8 +59,9 @@
 | --- | --- | --- |
 | [ ] | ⭐ Honey et al. (2009). Predicting human resting-state functional connectivity from structural connectivity. *PNAS* | `human_data.py` (SC 위 동역학으로 FC 시뮬레이션) |
 | [ ] | ⭐ Suárez, Markello, Betzel & Misic (2020). Linking structure and function in macroscale brain networks. *Trends Cogn Sci* | 제안서 3.1절 (분야 리뷰) |
-| [ ] | Sarwar et al. (2021). Structure-function coupling in the human connectome: a machine learning approach. *NeuroImage* | 제안서 3.1절 — [확인 필요](#확인-필요-항목) |
-| [ ] | Neudorf et al. (2022). Structure can predict function in the human brain: a graph neural network deep learning model of functional connectivity and centrality based on structural connectivity. *Brain Struct Funct* | 제안서 3.1절 "89%/99%" 수치 — [확인 필요](#확인-필요-항목) |
+| [ ] | Sarwar et al. (2021). Structure-function coupling in the human connectome: a machine learning approach. *NeuroImage* | 제안서 3.1절 (개인 수준 SC→FC 딥러닝 예측) |
+| [ ] | Neudorf et al. (2022). Structure can predict function in the human brain: a graph neural network deep learning model of functional connectivity and centrality based on structural connectivity. *Brain Struct Funct* | 제안서 3.1절 "89%/99%" 수치의 출처 |
+| [ ] | Zalesky et al. (2024). Predicting an individual's functional connectivity from their structural connectome: evaluation of evidence, recommendations, and future prospects. *Netw Neurosci* | 제안서 3.1절 (개인 수준 SC→FC 예측의 한계 평가) |
 | [ ] | Rosenthal et al. (2018). Mapping higher-order relations between brain structure and function with embedded vector representations of connectomes. *Nat Commun* | SC-FC 임베딩 접근 |
 | [ ] | (조사 필요) FC→SC 역방향 예측 선행 연구 | `decoder.py`, 제안서 3.1절의 "공백" 주장 근거 |
 
@@ -117,9 +118,9 @@
 
 ## 확인 필요 항목
 
-제안서(`docs/proposal.md`)와 대조하다가 발견한, 원문으로 확인해야 할 부분입니다.
+제안서(`docs/proposal.md`, `docs/proposal.docx`)와 대조하며 찾은 인용 문제입니다. 1–3번은 웹 검색으로 서지 정보를 확인한 뒤 제안서에 반영했습니다.
 
-1. **"89% / 99%" 수치의 출처**: 제안서는 이 수치를 *Sarwar et al. (2021), Brain Structure and Function*으로 인용합니다. 하지만 *Brain Struct Funct*에 실린 GNN 기반 SC→FC 논문은 **Neudorf et al. (2022)**이고, Sarwar et al. (2021)은 *NeuroImage*에 실린 것으로 알고 있습니다. 두 논문을 모두 확인해서 참고문헌을 바로잡아야 합니다.
-2. **Zhang, L. et al. (2024), *Network Neuroscience***: 제안서 참고문헌에 있는 이 논문의 저자·제목을 확신할 수 없습니다. 실제로 존재하는지 검색해서 확인하세요.
-3. **HCP 데이터 접근 조건**: 제안서 4.1절은 "승인 절차 없이 접근 가능"이라고 적었지만, Open Access 데이터도 ConnectomeDB 계정 가입과 데이터 이용약관(Data Use Terms) 동의가 필요합니다.
-4. **FC→SC 역방향 선행 연구**: 이 목록에 구체적인 논문을 넣지 못했습니다. `"inferring structural connectivity from functional connectivity"`, `"functional-to-structural connectivity prediction"` 같은 키워드로 조사해서 3.1절 표를 채우세요. 제안서의 "이 방향은 덜 연구되었다"는 주장을 뒷받침하는 데 가장 중요한 부분입니다.
+1. ~~**"89% / 99%" 수치의 출처**~~ → **수정 완료**: *Brain Struct Funct*의 GNN 논문은 Neudorf, Kress & Borowsky (2022)입니다. Sarwar et al. (2021)은 *NeuroImage*에 실린 별개 논문이라 따로 인용했습니다. 논문 버전(bioRxiv/출판본)에 따라 보고된 수치가 다를 수 있으니, 인용 전에 출판본의 수치를 다시 확인하세요.
+2. ~~**Zhang, L. et al. (2024), *Network Neuroscience***~~ → **수정 완료**: 실제 저자는 Zalesky, Sarwar, Tian, Liu, Yeo & Ramamohanarao (2024)입니다. 이 논문은 FC→SC 역방향이 아니라 **SC→FC 개인 수준 예측**을 평가한 논문이라, 제안서 3.1절의 해당 문장도 내용에 맞게 고쳤습니다.
+3. ~~**HCP 데이터 접근 조건**~~ → **수정 완료**: "승인 절차 없이"를 "ConnectomeDB 계정 가입과 Open Access 데이터 이용약관 동의 후 접근 가능"으로 고쳤습니다.
+4. **FC→SC 역방향 선행 연구** (남은 과제): `"inferring structural connectivity from functional connectivity"`, `"functional-to-structural connectivity prediction"` 같은 키워드로 조사해서 3.1절 표를 채우세요. 제안서의 "이 방향은 덜 연구되었다"는 주장에는 아직 직접 인용할 근거가 없습니다.

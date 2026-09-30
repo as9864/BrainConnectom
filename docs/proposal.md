@@ -26,7 +26,7 @@
 
 ### 3.1 구조-기능 결합(SC-FC coupling) 연구
 
-그래프 신경망을 이용해 구조적 커넥티비티로부터 기능적 커넥티비티 및 중심성(centrality)을 예측하는 연구(Sarwar et al., 2021)는 HCP 데이터에서 평균 분산의 89%, 중심성의 99%를 설명하는 성과를 보였다. 반대 방향인 기능에서 구조를 예측하는 문제는 상대적으로 덜 연구되었으며, 최근 리뷰(Network Neuroscience, 2024)는 이 방향의 예측이 근본적으로 더 어렵고 방법론적으로 아직 합의가 부족하다고 평가한다. 본 연구는 이 공백을 다룬다.
+그래프 신경망을 이용해 구조적 커넥티비티로부터 기능적 커넥티비티 및 중심성(centrality)을 예측하는 연구(Neudorf et al., 2022)는 HCP 데이터에서 평균 분산의 89%, 중심성의 99%를 설명하는 성과를 보였다(개인 수준 딥러닝 예측은 Sarwar et al., 2021 참조). 그러나 같은 구조→기능 방향에서도, 개인 수준 예측 성능은 적절한 기준선과 비교하면 제한적이라는 평가가 있다(집단 평균 기준 대비 약 8–11% 개선; Zalesky et al., 2024). 반대 방향인 기능에서 구조를 예측하는 문제는 상대적으로 덜 연구되었으며, 정방향조차 개인 수준에서는 쉽지 않다는 점에 ill-posed 역문제라는 어려움까지 더해진다. 본 연구는 이 공백을 다룬다.
 
 ### 3.2 비교 커넥톰믹스와 보존된 배선 원리
 
@@ -43,7 +43,7 @@ C. elegans, Platynereis, 초파리, 제브라피시, 마우스 등 단일 뉴런
 - C. elegans 화학 시냅스 커넥톰(뉴런 279개) — CoMuNeLab/C-elegans-Multiplex-Connectome, 본 저장소에 이미 확보됨(`data_sources/celegans_multiplex`)
 - 초파리 hemibrain 커넥톰(PN→Kenyon cell 등 회로별 서브그래프) — neuPrint 연동, 본 저장소에 이미 파이프라인 구축됨(`flyhash_experiment/connectome.py`)
 - 가능 시 추가 확보: 유충 초파리 전뇌 커넥톰(Winding et al., 2023), 데이터 증강을 위한 추가 표본 확보 목적
-- 인간 구조적/기능적 커넥톰 쌍 — Human Connectome Project (HCP) S1200 Release, 확산 MRI tractography 기반 SC와 안정상태(resting-state) fMRI 기반 FC, 승인 절차 없이 접근 가능
+- 인간 구조적/기능적 커넥톰 쌍 — Human Connectome Project (HCP) S1200 Release, 확산 MRI tractography 기반 SC와 안정상태(resting-state) fMRI 기반 FC, ConnectomeDB 계정 가입과 Open Access 데이터 이용약관 동의 후 접근 가능(별도 기관 승인 불필요)
 
 ### 4.2 1단계 — 인간 FC→SC 베이스라인 디코더
 
@@ -102,12 +102,15 @@ C. elegans와 초파리 구조적 커넥톰만으로는 표본 수가 절대적�
 
 ## 9. 참고문헌 및 데이터 출처
 
-- Suárez, L.E. et al. Learning function from structure in neuromorphic networks. *Nature Machine Intelligence*.
-- Sarwar, T. et al. (2021). Structure can predict function in the human brain. *Brain Structure and Function*.
-- Zhang, L. et al. (2024). Predicting an individual's functional connectivity from their structural connectome. *Network Neuroscience*.
-- Bullmore, E. & Sporns, O. (2012). The economy of brain network organization. *Nature Reviews Neuroscience*.
-- Witvliet, D. et al. (2021). Connectomes across development reveal principles of brain maturation. *Nature*.
-- Winding, M. et al. (2023). The connectome of an insect brain. *Science*.
-- Scheffer, L.K. et al. (2020). A connectome and analysis of the adult Drosophila central brain. *eLife*.
-- CoMuNeLab/C-elegans-Multiplex-Connectome dataset (`data_sources/celegans_multiplex`의 출처).
+- Suárez, L.E., Richards, B.A., Lajoie, G. & Misic, B. (2021). Learning function from structure in neuromorphic networks. *Nature Machine Intelligence*, 3(9), 771–786. doi:10.1038/s42256-021-00376-1
+- Neudorf, J., Kress, S. & Borowsky, R. (2022). Structure can predict function in the human brain: a graph neural network deep learning model of functional connectivity and centrality based on structural connectivity. *Brain Structure and Function*, 227, 331–343. doi:10.1007/s00429-021-02403-8
+- Sarwar, T., Tian, Y., Yeo, B.T.T., Ramamohanarao, K. & Zalesky, A. (2021). Structure-function coupling in the human connectome: a machine learning approach. *NeuroImage*, 226, 117609. doi:10.1016/j.neuroimage.2020.117609
+- Zalesky, A., Sarwar, T., Tian, Y., Liu, Y., Yeo, B.T.T. & Ramamohanarao, K. (2024). Predicting an individual's functional connectivity from their structural connectome: evaluation of evidence, recommendations, and future prospects. *Network Neuroscience*, 8(4), 1291–1309. doi:10.1162/netn_a_00400
+- Bullmore, E. & Sporns, O. (2012). The economy of brain network organization. *Nature Reviews Neuroscience*, 13, 336–349. doi:10.1038/nrn3214
+- Witvliet, D. et al. (2021). Connectomes across development reveal principles of brain maturation. *Nature*, 596, 257–261. doi:10.1038/s41586-021-03778-8
+- Winding, M. et al. (2023). The connectome of an insect brain. *Science*, 379, eadd9330. doi:10.1126/science.add9330
+- Scheffer, L.K. et al. (2020). A connectome and analysis of the adult Drosophila central brain. *eLife*, 9, e57443. doi:10.7554/eLife.57443
+- Chen, B.L., Hall, D.H. & Chklovskii, D.B. (2006). Wiring optimization can relate neuronal structure and function. *PNAS*, 103(12), 4723–4728. (CoMuNeLab/C-elegans-Multiplex-Connectome 데이터셋 인용 요구 논문, 본 저장소 data_sources/celegans_multiplex의 출처)
+- De Domenico, M., Porter, M.A. & Arenas, A. (2015). MuxViz: a tool for multilayer analysis and visualization of networks. *Journal of Complex Networks*, 3(2), 159–176. (동 데이터셋 인용 요구 논문)
+- Van Essen, D.C. et al. (2013). The WU-Minn Human Connectome Project: an overview. *NeuroImage*, 80, 62–79. doi:10.1016/j.neuroimage.2013.05.041
 - Human Connectome Project (HCP) S1200 Release, ConnectomeDB.
