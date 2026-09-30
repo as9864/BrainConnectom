@@ -5,7 +5,8 @@
 - ⭐ = 먼저 읽을 논문
 - `[ ]` → 다 읽으면 `[x]`로 바꿔서 진행 상황을 기록하세요
 - **관련 코드** 칸은 그 논문이 저장소의 어느 부분과 이어지는지를 적은 것입니다
-- 서지 정보는 기억에 기반해 정리한 것이라, 인용하기 전에 반드시 원문(DOI/출판사 페이지)으로 저자·연도·저널을 확인하세요. 특히 [확인 필요](#확인-필요-항목) 섹션의 항목은 주의가 필요합니다.
+- 요약은 [SUMMARIES.md](SUMMARIES.md)에 있습니다
+- 서지 정보는 기억에 기반해 정리한 것이라 (3.1b절과 제안서 참고문헌은 웹 검색으로 확인함), 인용하기 전에 반드시 원문(DOI/출판사 페이지)으로 저자·연도·저널을 확인하세요. 특히 [확인 필요](#확인-필요-항목) 섹션의 항목은 주의가 필요합니다.
 
 ---
 
@@ -63,7 +64,25 @@
 | [ ] | Neudorf et al. (2022). Structure can predict function in the human brain: a graph neural network deep learning model of functional connectivity and centrality based on structural connectivity. *Brain Struct Funct* | 제안서 3.1절 "89%/99%" 수치의 출처 |
 | [ ] | Zalesky et al. (2024). Predicting an individual's functional connectivity from their structural connectome: evaluation of evidence, recommendations, and future prospects. *Netw Neurosci* | 제안서 3.1절 (개인 수준 SC→FC 예측의 한계 평가) |
 | [ ] | Rosenthal et al. (2018). Mapping higher-order relations between brain structure and function with embedded vector representations of connectomes. *Nat Commun* | SC-FC 임베딩 접근 |
-| [ ] | (조사 필요) FC→SC 역방향 예측 선행 연구 | `decoder.py`, 제안서 3.1절의 "공백" 주장 근거 |
+| [ ] | Fotiadis, Parkes, Davis, Satterthwaite, Shinohara & Bassett (2024). Structure–function coupling in macroscale human brain networks. *Nat Rev Neurosci* 25, 688–704 | 제안서 3.1절 (최신 리뷰) |
+
+### 3.1b FC→SC 역방향 (제안서가 다루는 방향)
+
+서지 정보는 웹 검색으로 확인했습니다. 각 논문 요약은 [SUMMARIES.md](SUMMARIES.md#31b-fcsc-역방향)에 있습니다.
+
+| 읽음 | 논문 | 관련 코드 |
+| --- | --- | --- |
+| [ ] | ⭐ Zhang, Wang & Zhu (2022). Predicting brain structural network using functional connectivity. *Med Image Anal* 79, 102463. doi:10.1016/j.media.2022.102463 | `decoder.py` — **가장 직접적인 선행 연구** (FC→SC GCN-GAN, HCP·ADNI) |
+| [ ] | Zhang, Wang & Zhu (2020). Recovering brain structural connectivity from functional connectivity via multi-GCN based generative adversarial network. *MICCAI 2020*, 53–61 | 위 논문의 학회 버전, 코드: [qidianzl/Recovering-Brain-Structure-Network-Using-Functional-Connectivity](https://github.com/qidianzl/Recovering-Brain-Structure-Network-Using-Functional-Connectivity) |
+| [ ] | ⭐ Li & Mateos (2019). Identifying structural brain networks from functional connectivity: a network deconvolution approach. *ICASSP 2019* | `decoder.py` — 확산 모델 기반 역문제 + 희소성 정규화 (prior 정규화와 가장 가까운 발상) |
+| [ ] | Li, Mateos & Zhang (2022). Learning to model the relationship between brain structural and functional connectomes. *IEEE Trans Signal Inf Process Netw* 8, 830–843 | 그래프 신호처리 기반 SC↔FC 모델 학습 |
+| [ ] | ⭐ Liégeois, Santos, Matta, Van De Ville & Sayed (2020). Revisiting correlation-based functional connectivity and its relationship with structural connectivity. *Netw Neurosci* 4(4), 1235–1251 | `human_data.py`, `decoder.py` — 상관 대신 정밀도 행렬(partial correlation) FC가 SC와 더 잘 맞음 → 입력 FC 정의 선택 |
+| [ ] | Chen, Bukhari, Lin & Sejnowski (2022). Functional connectivity of fMRI using differential covariance predicts structural connectivity and behavioral reaction times. *Netw Neurosci* 6(2), 614–633 | 입력 FC를 dCov로 바꾸면 SC 복원이 쉬워지는가 |
+| [ ] | Hinne, Ambrogioni, Janssen, Heskes & van Gerven (2014). Structurally-informed Bayesian functional connectivity analysis. *NeuroImage* 86, 294–305 | 반대 방향(SC를 FC 추정의 prior로) — 베이지안 prior 설계 참고 |
+| [ ] | Smith et al. (2011). Network modelling methods for FMRI. *NeuroImage* 54(2), 875–891 | 어떤 FC 추정법이 실제 직접 연결을 잘 복원하는가 (시뮬레이션 벤치마크) |
+| [ ] | Wu, Yu & Chen (2025). Can functional connectivity be used to refine structural connectivity strength by combining neural computational model and generative adversarial network? *Neural Comput Appl* 37, 3489–3504 | 신경 동역학 모델 + GAN으로 FC에서 SC 강도 보정 |
+| [ ] | Zuo et al. (2023). Generative AI enables structural brain network construction from fMRI via symmetric diffusion learning. arXiv:2309.16205 | 확산 모델(DDPM) 기반 fMRI→SC 생성 (프리프린트) |
+| [ ] | Tan et al. (2025). SFC-GAN: a generative adversarial network for brain functional and structural connectome translation. arXiv:2501.07055 | CycleGAN 기반 SC↔FC 양방향 변환 (프리프린트) |
 
 ### 3.2 비교 커넥톰믹스와 보존된 배선 원리
 
@@ -123,4 +142,4 @@
 1. ~~**"89% / 99%" 수치의 출처**~~ → **수정 완료**: *Brain Struct Funct*의 GNN 논문은 Neudorf, Kress & Borowsky (2022)입니다. Sarwar et al. (2021)은 *NeuroImage*에 실린 별개 논문이라 따로 인용했습니다. 논문 버전(bioRxiv/출판본)에 따라 보고된 수치가 다를 수 있으니, 인용 전에 출판본의 수치를 다시 확인하세요.
 2. ~~**Zhang, L. et al. (2024), *Network Neuroscience***~~ → **수정 완료**: 실제 저자는 Zalesky, Sarwar, Tian, Liu, Yeo & Ramamohanarao (2024)입니다. 이 논문은 FC→SC 역방향이 아니라 **SC→FC 개인 수준 예측**을 평가한 논문이라, 제안서 3.1절의 해당 문장도 내용에 맞게 고쳤습니다.
 3. ~~**HCP 데이터 접근 조건**~~ → **수정 완료**: "승인 절차 없이"를 "ConnectomeDB 계정 가입과 Open Access 데이터 이용약관 동의 후 접근 가능"으로 고쳤습니다.
-4. **FC→SC 역방향 선행 연구** (남은 과제): `"inferring structural connectivity from functional connectivity"`, `"functional-to-structural connectivity prediction"` 같은 키워드로 조사해서 3.1절 표를 채우세요. 제안서의 "이 방향은 덜 연구되었다"는 주장에는 아직 직접 인용할 근거가 없습니다.
+4. ~~**FC→SC 역방향 선행 연구**~~ → **조사 완료**: [3.1b절](#31b-fcsc-역방향-제안서가-다루는-방향)에 11편을 정리했습니다. 이 방향 연구는 **"없다"가 아니라 "적고, 주로 의료영상 쪽 GAN/GCN 연구"**입니다. 따라서 제안서의 "덜 연구되었다"는 표현은 유지할 수 있지만, 독창성 주장은 "FC→SC 자체"가 아니라 **"종간 위상 통계를 prior로 쓴다는 점"**에 두어야 합니다. 특히 Zhang, Wang & Zhu (2022)는 반드시 인용하고 비교 대상으로 삼아야 합니다. 참고로 원래 제안서의 "Zhang, L. et al." 인용은 이 논문(제1저자 Lu Zhang)과 Zalesky et al. (2024)가 섞인 것으로 보입니다.
