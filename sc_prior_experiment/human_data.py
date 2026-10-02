@@ -102,15 +102,11 @@ def make_cohort(n_subjects=40, n_regions=90, seed=0):
     return cohort
 
 
-def load_hcp_cohort(*args, **kwargs):
-    """Real-data replacement for make_cohort() - not implemented in this
-    pilot. To wire in real data: download HCP S1200 diffusion tractography
-    (SC) and resting-state fMRI correlation matrices (FC) per subject from
-    ConnectomeDB (free account, no long approval wait), parcellate both with
-    the same atlas, and return the same [{"sc":..., "fc":...}, ...] list
-    shape that make_cohort() produces so no other file needs to change.
+def load_hcp_cohort(path, sc_is_log=False):
+    """Real-data replacement for make_cohort(): per-subject HCP SC/FC pairs
+    you obtained yourself (HCP requires each user to accept its data use
+    terms). Same [{"sc":..., "fc":...}, ...] shape, so nothing else changes.
+    Formats and details: sc_prior_experiment/hcp_data.py.
     """
-    raise NotImplementedError(
-        "HCP integration is out of scope for the 2-week pilot - see docstring "
-        "for the interface make_cohort() already provides."
-    )
+    from sc_prior_experiment.hcp_data import load_individual_cohort
+    return load_individual_cohort(path, sc_is_log=sc_is_log)

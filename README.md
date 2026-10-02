@@ -80,7 +80,7 @@ python -m sc_prior_experiment.run_experiment --n-subjects 60
 - `null_prior` — C. elegans·초파리 커넥톰의 **Erdos-Renyi 무작위화 버전**으로 만든 통계를 향해 정규화 (부정 대조군: "그럴듯해 보이는 아무 정규화"의 효과만 분리)
 - `bio_prior` — 실제 C. elegans 커넥톰과 초파리 hemibrain 회로 5개(버섯체, 중심복합체, 측각, 더듬이엽, 외측 복합체)의 실측 구조적 커넥톰(+ 서브그래프 표본 증강)에서 뽑은 **종간 보존 위상 통계**(모듈성, 리치클럽, 클러스터링, 노드 강도 분포의 불균등도)를 향해 정규화
 
-인간 SC-FC 데이터는 아직 HCP 실접속 없이 **합성(synthetic) 코호트**로 대체돼 있습니다(`human_data.py`) — 모듈 구조를 가진 SC 템플릿에서 개인별 변이를 주고, 그 위에서 단순 동역학을 굴려 FC를 시뮬레이션합니다. `make_cohort()`와 동일한 인터페이스(`{"sc":.., "fc":..}` 리스트)를 지키는 `load_hcp_cohort()`로 나중에 그대로 교체할 수 있도록 설계했습니다.
+인간 SC-FC 데이터는 기본값으로 **합성(synthetic) 코호트**를 씁니다(`human_data.py`). 실제 HCP 데이터는 아래 3-A의 `run_transfer.py`에서 쓸 수 있습니다 — 모듈 구조를 가진 SC 템플릿에서 개인별 변이를 주고, 그 위에서 단순 동역학을 굴려 FC를 시뮬레이션합니다. `make_cohort()`와 동일한 인터페이스(`{"sc":.., "fc":..}` 리스트)를 지키는 `load_hcp_cohort()`로 나중에 그대로 교체할 수 있도록 설계했습니다.
 
 평가는 세 갈래로:
 - **엣지 단위 정확도** — 예측 SC와 실제 SC 상삼각 벡터의 피어슨 상관계수
@@ -103,6 +103,8 @@ python -m sc_prior_experiment.run_transfer --n-subjects 60 --density 0.04 # 밀�
 - 통계를 **널 모델 대비 비율**(1 = 무작위와 같음)로 바꿔 규모·밀도·측정 방식의 영향을 줄입니다 (`normalized.py`).
 - prior 출처를 **사다리**로 놓고 비교합니다: 널(하한) → 무척추동물 → 인간 학습 코호트 → 정답(oracle, 상한).
 - **전이 지수 TI** = (무척추동물 − 널) / (정답 − 널): 정답이 주는 이득 중 무척추동물 prior가 회수하는 비율.
+
+**실제 HCP 데이터**: `--human hcp_group`은 ENIGMA Toolbox의 HCP 집단 평균 SC(뇌 영역 지도 6종)를 자동으로 받아 1부를 돌립니다. 개인별 SC·FC 쌍이 있으면 `--human hcp_cohort --hcp-cohort <경로>`로 2부까지 돌릴 수 있습니다. 준비 방법과 HCP 약관은 [docs/hcp_data_guide.md](docs/hcp_data_guide.md)를 보세요.
 
 결과: `results/transfer_descriptive_*.csv`, `results/transfer_utility_*.csv`, `results/transfer_per_stat_*.csv`.
 
@@ -127,13 +129,16 @@ sc_prior_experiment/
   human_data.py         - 인간 SC-FC 합성 코호트 생성 (HCP 실데이터 연동 지점 명시)
   decoder.py            - FC→SC 베이스라인 디코더 + 사전분포 정규화 변형
   run_experiment.py     - 메인 스크립트, baseline/null_prior/bio_prior ablation, results/*.csv 및 *.png 생성
+  hcp_data.py           - 실제 HCP SC/FC 로더 (ENIGMA 집단 평균 자동 다운로드, 개인별 데이터는 직접 준비)
   normalized.py         - 널 모델 대비 정규화 통계 (모듈성/클러스터링/리치클럽/차수 불균등도), 밀도 맞춤
   run_transfer.py       - 전이 가능성 분석: 널→무척추동물→인간→정답 prior 사다리, 전이 지수(TI)
 data_sources/
   celegans_multiplex/ - 받아둔 커넥톰 데이터셋 (자체 README/LICENSE 포함)
+  hcp_enigma/         - HCP 집단 평균 SC/FC 캐시 (README만 커밋, HCP 약관 적용)
   hemibrain/          - 초파리 hemibrain v1.2에서 뽑은 PN-KC·회로 연결 (자체 README, CC BY 4.0)
 docs/
   ARCHITECTURE.md    - 아키텍처와 각 구성요소에 대한 상세 설명
+  hcp_data_guide.md  - HCP 실데이터(집단 평균·개인별) 준비 방법과 약관
   methodology_transferability.md - 전이 가능성(A 방향) 배경 지식·방법론·결과
   proposal.docx      - 실험 3(sc_prior_experiment)의 연구 제안서
   papers/            - 관련 논문 해설 (번역이 아닌, 읽고 재구성한 요약) + READING_LIST.md(배경 논문 읽기 목록), SUMMARIES.md(논문별 요약)

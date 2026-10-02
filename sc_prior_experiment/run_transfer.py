@@ -24,6 +24,8 @@ recovers (1 = as good as knowing the answer, 0 = no better than random).
 Usage:
     python -m sc_prior_experiment.run_transfer --n-subjects 60
     python -m sc_prior_experiment.run_transfer --density 0.04   # density-matched sensitivity run
+    python -m sc_prior_experiment.run_transfer --human hcp_group   # real HCP group SC, Part 1 only
+    python -m sc_prior_experiment.run_transfer --human hcp_cohort --hcp-cohort path/to/cohort.npz
 """
 import argparse
 from pathlib import Path
@@ -33,7 +35,7 @@ import pandas as pd
 
 from flyhash_experiment import hemibrain
 from reservoir_experiment.connectome import build_weight_matrix as celegans_weight_matrix
-from sc_prior_experiment import decoder, human_data
+from sc_prior_experiment import decoder, hcp_data, human_data
 from sc_prior_experiment import normalized as N
 from sc_prior_experiment.invertebrate_prior import FLY_SUBGRAPH_NODES, N_SUBSAMPLES_PER_GRAPH, SUBSAMPLE_FRAC
 from sc_prior_experiment.run_experiment import edge_correlation
@@ -93,16 +95,21 @@ def candidate_family(P):
 
 def _print_ti(df, metric, by, sources, label=None):
     """Transfer index, reported only when the oracle reliably beats the null
-    (paired t-statistic over subjects > 2); otherwise the denominator is
-    noise and the ratio meaningless."""
+    (paired t-statistic over subjects > 2) by a non-negligible margin (gap at
+    least a quarter of the null's across-subject std); otherwise the
+    denominator is noise or tiny and the ratio meaningless."""
     piv = df.pivot_table(index="subject", columns=by, values=metric)
     diff = piv["oracle"] - piv["null"]
     t = diff.mean() / (diff.std(ddof=1) / np.sqrt(len(diff)) + 1e-12)
     name = label or metric
+    gap = diff.mean()
     if abs(t) < 2:
         print(f"  {name:16s} TI undefined (oracle vs null not distinguishable, t={t:+.1f})")
         return
-    gap = diff.mean()
+    if abs(gap) < 0.25 * piv["null"].std(ddof=1):
+        print(f"  {name:16s} TI undefined (oracle-null gap {gap:+.4f} is practically negligible, "
+              f"< 0.25 x null std)")
+        return
     parts = [f"{src} {(piv[src] - piv['null']).mean() / gap:+.2f}" for src in sources]
     print(f"  {name:16s} TI: " + ", ".join(parts) + f"   (oracle vs null t={t:+.1f})")
 
@@ -117,18 +124,55 @@ def main():
                              "(default: each graph's native density)")
     parser.add_argument("--n-nulls", type=int, default=N.N_NULLS_DEFAULT)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--human", choices=["synthetic", "hcp_group", "hcp_cohort"], default="synthetic",
+                        help="synthetic cohort; real HCP group-average SC from the ENIGMA Toolbox "
+                             "(descriptive Part 1 only); or your own per-subject HCP SC/FC pairs")
+    parser.add_argument("--hcp-cohort", help="--human hcp_cohort: .npz or directory, see hcp_data.py")
+    parser.add_argument("--sc-is-log", action="store_true", help="--human hcp_cohort: SC weights are log-transformed")
+    parser.add_argument("--parcellations", nargs="+", default=list(hcp_data.PARCELLATIONS),
+                        help="--human hcp_group: which parcellations to use")
     args = parser.parse_args()
     RESULTS_DIR.mkdir(exist_ok=True)
-    tag = "native" if args.density is None else f"d{args.density:g}"
+    tag = f"{args.human}_" + ("native" if args.density is None else f"d{args.density:g}")
 
     print("=== Invertebrate and null signatures ===")
     bio, null = invertebrate_samples(args.density, args.n_nulls)
 
-    print("\n=== Human cohort ===")
-    cohort = human_data.make_cohort(n_subjects=args.n_subjects, n_regions=args.n_regions, seed=args.seed)
-    split = int(len(cohort) * args.train_frac)
-    train, test = cohort[:split], cohort[split:]
-    human_sigs = [N.normalized_signature(p["sc"], args.density, args.n_nulls, seed=i) for i, p in enumerate(train)]
+    print("\n=== Human connectomes ===")
+    human_groups = {}
+    if args.human == "hcp_group":
+        train = test = None
+        for parc in args.parcellations:
+            loaded = hcp_data.load_group_connectome(parc)
+            if loaded is None:
+                continue
+            sc = loaded[0]
+            # one group matrix per parcellation: add node subsamples, as for the invertebrates
+            graphs = [sc] + [subsample_subgraph(sc, frac_nodes=SUBSAMPLE_FRAC, seed=300 + i)
+                             for i in range(N_SUBSAMPLES_PER_GRAPH)]
+            graphs = [W for W in graphs if _usable(W, args.density)]
+            if not graphs:
+                print(f"[transfer] human_{parc}: excluded (sparser than target density {args.density})")
+                continue
+            human_groups[f"human_{parc}"] = [N.normalized_signature(W, args.density, args.n_nulls, seed=i)
+                                             for i, W in enumerate(graphs)]
+            print(f"[transfer] human_{parc}: {sc.shape[0]} regions (HCP group average, ENIGMA), "
+                  f"native density {N.density_of(N.binarize(sc)):.3f}")
+        if not human_groups:
+            raise SystemExit("No HCP group matrices available (see hcp_data.py).")
+        human_sigs = sum(human_groups.values(), [])
+    else:
+        if args.human == "hcp_cohort":
+            if not args.hcp_cohort:
+                raise SystemExit("--human hcp_cohort needs --hcp-cohort PATH")
+            cohort = hcp_data.load_individual_cohort(args.hcp_cohort, sc_is_log=args.sc_is_log)
+        else:
+            cohort = human_data.make_cohort(n_subjects=args.n_subjects, n_regions=args.n_regions, seed=args.seed)
+        split = int(len(cohort) * args.train_frac)
+        train, test = cohort[:split], cohort[split:]
+        human_sigs = [N.normalized_signature(p["sc"], args.density, args.n_nulls, seed=i)
+                      for i, p in enumerate(train)]
+    n_regions = None if train is None else train[0]["sc"].shape[0]
 
     priors = {
         "null": N.aggregate_species([sum((v for k, v in null.items() if k == "celegans"), []),
@@ -140,7 +184,7 @@ def main():
 
     # ---- Part 1: descriptive ----
     rows = []
-    groups = {**{k: v for k, v in bio.items()}, "human": human_sigs,
+    groups = {**{k: v for k, v in bio.items()}, **human_groups, "human": human_sigs,
               "null (ER of invertebrates)": sum(null.values(), [])}
     for group, sigs in groups.items():
         agg = N.aggregate(sigs)
@@ -160,6 +204,12 @@ def main():
               f"human={priors['human'][k]['mean']:.3f}  z={z:+.1f}  "
               f"same direction vs random: {'yes' if same_side else 'no'}")
 
+    if train is None:
+        print("\nPart 2 (FC->SC utility) skipped: group-average data has no per-subject SC/FC pairs. "
+              "Use --human hcp_cohort with your own HCP subjects.")
+        print(f"Saved results/transfer_descriptive_{tag}.csv")
+        return
+
     # ---- Part 2: utility ----
     print(f"\n=== Part 2: prior utility on {len(test)} held-out subjects ===")
     model = decoder.train_baseline_decoder(train)
@@ -167,7 +217,7 @@ def main():
     for i, subj in enumerate(test):
         true_sig = N.normalized_signature(subj["sc"], args.density, args.n_nulls, seed=i)
         oracle = {k: {"mean": true_sig[k], "std": priors["human"][k]["std"]} for k in N.STATS}
-        P = decoder.predict_sc(model, subj["fc"], args.n_regions)
+        P = decoder.predict_sc(model, subj["fc"], n_regions)
         cands = list(candidate_family(P))
         for c in cands:
             c["sig"] = N.normalized_signature(c["W"], args.density, max(2, args.n_nulls // 2), seed=i)
