@@ -91,6 +91,21 @@ python -m sc_prior_experiment.run_experiment --n-subjects 60
 
 **현재 알려진 한계 (정직하게 기록)**: 지금 합성 데이터로 돌려보면 `bio_prior`가 `baseline`보다 딱히 낫지 않습니다 — 합성 인간 코호트의 모듈 구조가 실제 생물학적 배선과 아무 관련이 없으니 당연한 결과입니다. 이 파일럿의 목적은 "효과를 이미 입증하는 것"이 아니라 **3단계 파이프라인이 실제로 끝까지 동작하고, 세 조건이 서로 다른 결과를 내는 것**(즉 정규화 메커니즘 자체는 작동한다는 것)을 확인하는 것입니다. 실제 신호 유무는 HCP 데이터 연동 이후에나 확인 가능합니다.
 
+### 3-A. 전이 가능성 분석 (`run_transfer.py`) — 현재 주 방향
+
+위 파일럿에서 "prior에 정답을 줘도 엣지 정확도가 오르지 않는다"는 것이 확인되어, 질문을 **"종을 넘어 보존된 배선 원리는 정량적으로 어디까지 옮겨 가는가?"**로 바꿨습니다. 자세한 배경·방법·결과는 [docs/methodology_transferability.md](docs/methodology_transferability.md)를 참고하세요.
+
+```bash
+python -m sc_prior_experiment.run_transfer --n-subjects 60                # 각 그래프의 원래 밀도
+python -m sc_prior_experiment.run_transfer --n-subjects 60 --density 0.04 # 밀도를 맞춘 민감도 분석
+```
+
+- 통계를 **널 모델 대비 비율**(1 = 무작위와 같음)로 바꿔 규모·밀도·측정 방식의 영향을 줄입니다 (`normalized.py`).
+- prior 출처를 **사다리**로 놓고 비교합니다: 널(하한) → 무척추동물 → 인간 학습 코호트 → 정답(oracle, 상한).
+- **전이 지수 TI** = (무척추동물 − 널) / (정답 − 널): 정답이 주는 이득 중 무척추동물 prior가 회수하는 비율.
+
+결과: `results/transfer_descriptive_*.csv`, `results/transfer_utility_*.csv`, `results/transfer_per_stat_*.csv`.
+
 **확장 아이디어**: `human_data.py`를 실제 HCP S1200 SC/FC 쌍으로 교체, `decoder.py`의 정규화를 강도 분포(CV) 외에 모듈성·클러스터링까지 포함한 다변량 손실항으로 확장, 유충 초파리 전뇌(Winding 2023)나 C. elegans 발달 단계별 커넥톰(Witvliet 2021)을 추가해 무척추동물 표본 수 늘리기.
 
 ## 프로젝트 구조
@@ -112,11 +127,14 @@ sc_prior_experiment/
   human_data.py         - 인간 SC-FC 합성 코호트 생성 (HCP 실데이터 연동 지점 명시)
   decoder.py            - FC→SC 베이스라인 디코더 + 사전분포 정규화 변형
   run_experiment.py     - 메인 스크립트, baseline/null_prior/bio_prior ablation, results/*.csv 및 *.png 생성
+  normalized.py         - 널 모델 대비 정규화 통계 (모듈성/클러스터링/리치클럽/차수 불균등도), 밀도 맞춤
+  run_transfer.py       - 전이 가능성 분석: 널→무척추동물→인간→정답 prior 사다리, 전이 지수(TI)
 data_sources/
   celegans_multiplex/ - 받아둔 커넥톰 데이터셋 (자체 README/LICENSE 포함)
   hemibrain/          - 초파리 hemibrain v1.2에서 뽑은 PN-KC·회로 연결 (자체 README, CC BY 4.0)
 docs/
   ARCHITECTURE.md    - 아키텍처와 각 구성요소에 대한 상세 설명
+  methodology_transferability.md - 전이 가능성(A 방향) 배경 지식·방법론·결과
   proposal.docx      - 실험 3(sc_prior_experiment)의 연구 제안서
   papers/            - 관련 논문 해설 (번역이 아닌, 읽고 재구성한 요약) + READING_LIST.md(배경 논문 읽기 목록), SUMMARIES.md(논문별 요약)
 ```

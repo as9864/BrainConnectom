@@ -33,6 +33,8 @@ BrainConnectom/
 │   ├── invertebrate_prior.py  C. elegans·초파리 → 종간 위상 사전분포(bio) + ER 널 대조군(null)
 │   ├── human_data.py          인간 SC-FC 합성 코호트 (HCP 연동 지점 명시)
 │   ├── decoder.py             FC→SC 베이스라인 + 사전분포 정규화 디코더
+│   ├── normalized.py          널 모델 대비 정규화 통계 + 밀도 맞춤 (종간 비교용)
+│   ├── run_transfer.py        전이 가능성 분석 (A 방향, docs/methodology_transferability.md)
 │   └── run_experiment.py     실행 스크립트 (엔트리 포인트)
 │
 ├── data_sources/

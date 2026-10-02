@@ -6,6 +6,8 @@
 
 논문 순서는 Abstract → Introduction → Related Work(→ Methods …)이지만, 정리는 **요청하신 순서(Abstract, Related Work, Introduction)**대로 했습니다. Introduction은 Related Work에서 정리한 "공백"을 가져다 쓰는 구조라, 이 순서로 읽는 편이 자연스럽습니다.
 
+> **⚠️ 방향 변경 (A)**: 상한선 실험에서 "정답 prior도 엣지 정확도를 올리지 못한다"는 것이 확인되어, 논문의 질문을 **"종간 보존 원리는 정량적으로 어디까지 옮겨 가는가"**로 바꿨습니다. 새 질문·가설·방법·결과는 [methodology_transferability.md](../methodology_transferability.md)에 있습니다. 아래 초안은 원래 프레이밍 기준이므로, Abstract와 Introduction ¶3~¶5는 새 질문에 맞게 다시 써야 합니다.
+
 ---
 
 ## 0. 먼저 정할 것: 논문의 한 문장

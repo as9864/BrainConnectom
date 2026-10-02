@@ -95,6 +95,23 @@
 | [ ] | Witvliet et al. (2021). Connectomes across development reveal principles of brain maturation. *Nature* | 증강용 추가 C. elegans 표본 |
 | [ ] | Winding et al. (2023). The connectome of an insect brain. *Science* | 증강용 유충 초파리 전뇌 |
 
+### 3.2b 전이 가능성 분석(A 방향)의 방법론 근거
+
+정규화·밀도·측정 방식 문제를 다루는 논문입니다. 서지 정보는 웹 검색으로 확인했고, 설명은 [methodology_transferability.md](../methodology_transferability.md)에 있습니다.
+
+| 읽음 | 논문 | 관련 코드 |
+| --- | --- | --- |
+| [ ] | ⭐ Váša & Mišić (2022). Null models in network neuroscience. *Nat Rev Neurosci* 23, 493–504 | `normalized.py` — 어떤 널 모델을 왜 쓰는가 |
+| [ ] | ⭐ Colizza, Flammini, Serrano & Vespignani (2006). Detecting rich-club ordering in complex networks. *Nat Phys* 2, 110–115 | `rich_club_norm` — 리치클럽은 반드시 널 대비로 봐야 함 |
+| [ ] | ⭐ van Wijk, Stam & Daffertshofer (2010). Comparing brain networks of different size and connectivity density using graph theory. *PLoS ONE* 5, e13701 | `--density` — 크기·밀도가 다른 네트워크 비교의 한계 |
+| [ ] | Humphries & Gurney (2008). Network 'small-world-ness'. *PLoS ONE* 3, e2051 | `clustering_norm` — 무작위 대비 비율로 정의하는 방식 |
+| [ ] | Zalesky et al. (2010). Whole-brain anatomical networks: does the choice of nodes matter? *NeuroImage* 50, 970–983 | 노드 정의(parcellation)에 따라 수치가 크게 달라짐 |
+| [ ] | Fornito, Zalesky & Breakspear (2013). Graph analysis of the human connectome: promise, progress, and pitfalls. *NeuroImage* 80, 426–444 | 그래프 분석의 함정 총정리 |
+| [ ] | Maier-Hein et al. (2017). The challenge of mapping the human connectome based on diffusion tractography. *Nat Commun* 8, 1349 | 인간 SC 측정 오류 → 이진화·정규화 근거 |
+| [ ] | ⭐ Assaf et al. (2020). Conservation of brain connectivity and wiring across the mammalian class. *Nat Neurosci* 23, 805–808 | 같은 측정 방식(확산 MRI)으로 본 종간 보존 — 정량적 보존의 선례 |
+| [ ] | ⭐ Faskowitz et al. (2023). Connectome topology of mammalian brains and its relationship to taxonomy and phylogeny. *Front Neurosci* 16, 1044372 | 계통적 거리와 위상 유사성 — "사다리"의 중간 단계 |
+| [ ] | Puxeddu et al. (2024). Relation of connectome topology to brain volume across 103 mammalian species. *PLoS Biol* 22, e3002489 | 뇌 크기에 따라 위상이 체계적으로 변함 → 정량적 전이가 제한될 근거 |
+
 ### 3.3 그래프 생성모델 (사전분포 학습)
 
 | 읽음 | 논문 | 관련 코드 |
