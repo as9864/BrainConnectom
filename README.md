@@ -4,7 +4,7 @@
 
 1. **conn2res 스타일 리저버 컴퓨팅** — 실제 예쁜꼬마선충(C. elegans) 커넥톰이 같은 크기·밀도·스펙트럴 반지름의 무작위 그래프보다 더 나은 "리저버"가 되는가? (`reservoir_experiment/`)
 2. **실제 배선을 반영한 FlyHash** — 초파리 후각회로 기반 유사도 해싱(FlyHash)에서, 이상화된 균등 무작위 연결 대신 생물학적으로 편향된(비균등) PN→Kenyon cell 연결을 쓰면 최근접 이웃 검색 성능이 달라지는가? (`flyhash_experiment/`)
-3. **종간 보존된 위상학적 사전정보로 인간 구조적 커넥톰 복원** — C. elegans·초파리 구조적 커넥톰에서 뽑아낸 "종을 초월해 보존된 배선 통계"가, 인간 기능적 커넥톰(FC)만으로 구조적 커넥톰(SC)을 복원하는 문제에 도움이 되는가? → **독립 프로젝트 [`sc_transfer/`](sc_transfer/)로 분리했습니다** (지금은 "종간 배선 원리가 인간 뇌로 얼마나 옮겨 가는가"로 질문이 바뀜)
+3. **종간 보존된 위상학적 사전정보로 인간 구조적 커넥톰 복원** — C. elegans·초파리 구조적 커넥톰에서 뽑아낸 "종을 초월해 보존된 배선 통계"가, 인간 기능적 커넥톰(FC)만으로 구조적 커넥톰(SC)을 복원하는 문제에 도움이 되는가? → **별도 저장소 [StructuralConnectomeTransfer](https://github.com/as9864/StructuralConnectomeTransfer)로 옮겼습니다** (지금은 "종간 배선 원리가 인간 뇌로 얼마나 옮겨 가는가"로 질문이 바뀜)
 
 세 실험 모두 별도 다운로드 없이 그 자리에서 바로 실행됩니다. 원래 참고했던 `conn2res` 툴박스는 직접 의존성으로 쓰지 않습니다 — Python 3.8/3.9 시절 패키지(`gym==0.21.0`, `numpy==1.22`)에 고정돼 있어서 최신 Python/setuptools에서는 빌드 자체가 안 됩니다. 그래서 이 저장소의 리저버 컴퓨팅 파이프라인은 같은 아이디어(실제 커넥톰 → 고정 리저버 가중치 → 선형 readout만 학습)를 처음부터 가볍게 재구현한 것입니다. 원 논문: https://www.nature.com/articles/s41467-024-44900-4
 
@@ -67,9 +67,9 @@ neuPrint 토큰(`.env`의 `NEUPRINT_TOKEN`)은 이 파일이 없을 때만 대�
 
 **여기가 실제로 아직 명확히 답이 안 나온 연구 질문입니다**: 초파리의 실제 배선(비균등)이 원 논문에서 이론적으로 분석한 이상화된 균등 무작위 모델보다 해시 품질 면에서 유리한지 불리한지는 아직 잘 다뤄지지 않았습니다. 실제 데이터를 연동한 뒤에는 `FlyHash`의 `wta_sparsity`를 바꿔보거나, `digits` 대신 더 고차원인 데이터(예: 문장 임베딩)로 바꿔서 입력 차원에 따라 효과가 달라지는지도 확인해볼 만합니다.
 
-## 3. 구조적 커넥톰 복원 → [`sc_transfer/`](sc_transfer/)로 분리
+## 3. 구조적 커넥톰 복원 → [StructuralConnectomeTransfer](https://github.com/as9864/StructuralConnectomeTransfer)
 
-이 실험은 독립 프로젝트로 옮겼습니다. 코드, 데이터, 제안서, 논문 초안, 읽기 목록이 모두 `sc_transfer/` 안에 있고, 이 저장소의 다른 실험에 의존하지 않습니다. 시작은 [sc_transfer/README.md](sc_transfer/README.md)부터 보세요.
+이 실험은 별도 저장소로 옮겼습니다. 코드, 데이터, 제안서, 논문 초안, 읽기 목록과 git 이력이 모두 그쪽에 있습니다. 이 저장소의 예전 커밋에는 `sc_prior_experiment/`로 남아 있습니다.
 
 ## 프로젝트 구조
 
@@ -84,7 +84,6 @@ flyhash_experiment/
   hemibrain.py      - hemibrain 공개 export → 실측 PN-KC 행렬 생성/로딩
   flyhash.py         - FlyHash, SimHash 구현
   run_experiment.py - 메인 스크립트, results/*.csv 및 *.png 생성
-sc_transfer/            - (분리됨) 종간 배선 원리 전이 가능성 프로젝트, 자체 README·CLAUDE.md
 data_sources/
   celegans_multiplex/ - 받아둔 커넥톰 데이터셋 (자체 README/LICENSE 포함)
   hemibrain/          - 초파리 hemibrain v1.2에서 뽑은 PN-KC 연결 (자체 README, CC BY 4.0)

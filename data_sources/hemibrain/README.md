@@ -21,6 +21,6 @@ python -m flyhash_experiment.hemibrain --build
 | --- | --- | --- |
 | `pn_kc.npz` | Projection neuron → Kenyon cell synapse counts from the whole-neuron connection table. PNs = type matching `.*PN.*`, KCs = type matching `^KC.*`, keeping only neurons in at least one PN→KC connection (1802 KCs × 157 PNs, 12,426 connections). | `flyhash_experiment` (`flyhash_real_hemibrain`) |
 
-The neuropil circuit subgraphs derived from the same export now live in `sc_transfer/data/hemibrain/`.
+The neuropil circuit subgraphs derived from the same export now live in the [StructuralConnectomeTransfer](https://github.com/as9864/StructuralConnectomeTransfer) repository (`data/hemibrain/`).
 
 Note: the hemibrain covers mostly the right hemisphere of the central brain.

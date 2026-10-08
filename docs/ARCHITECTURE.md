@@ -1,6 +1,6 @@
 # 아키텍처 & 구성요소 설명
 
-이 저장소의 두 실험(`reservoir_experiment/`, `flyhash_experiment/`)은 같은 철학을 따릅니다. 세 번째 실험이던 구조적 커넥톰 복원은 독립 프로젝트 [`sc_transfer/`](../sc_transfer/)로 분리했습니다.
+이 저장소의 두 실험(`reservoir_experiment/`, `flyhash_experiment/`)은 같은 철학을 따릅니다. 세 번째 실험이던 구조적 커넥톰 복원은 별도 저장소 [StructuralConnectomeTransfer](https://github.com/as9864/StructuralConnectomeTransfer)로 옮겼습니다.
 
 ```
 [실제 커넥톰 데이터] → [고정된 생물학적 구조를 가진 모델] → [표준 ML 벤치마크로 채점] → [무작위/이상화 모델과 비교]
@@ -26,8 +26,6 @@ BrainConnectom/
 │   ├── flyhash.py             FlyHash, SimHash 알고리즘 구현
 │   └── run_experiment.py     실행 스크립트 (엔트리 포인트)
 │
-├── sc_transfer/              (분리됨) 종간 배선 원리 전이 가능성 프로젝트 — 자체 README·문서·데이터
-│
 ├── data_sources/
 │   ├── celegans_multiplex/   실제 C. elegans 커넥톰 원본 데이터 (외부 프로젝트에서 받아옴)
 │   └── hemibrain/            초파리 hemibrain v1.2에서 뽑은 PN→KC 연결 (CC BY 4.0, 자체 README)
@@ -39,7 +37,7 @@ BrainConnectom/
     └── ARCHITECTURE.md         이 문서
 ```
 
-`reservoir_experiment`와 `flyhash_experiment` 사이에는 상호 의존이 없어서, 둘 중 하나만 지우거나 복사해서 다른 프로젝트로 옮겨도 문제없이 동작합니다. `sc_transfer/`는 필요한 코드(C. elegans 로더, 널 모델, 리저버, 초파리 회로)를 자체 사본으로 가지고 있어 이 두 실험과도 독립적입니다.
+`reservoir_experiment`와 `flyhash_experiment` 사이에는 상호 의존이 없어서, 둘 중 하나만 지우거나 복사해서 다른 프로젝트로 옮겨도 문제없이 동작합니다.
 
 ---
 
@@ -153,9 +151,9 @@ results/flyhash_results.csv, results/flyhash_comparison.png
 
 ---
 
-## 실험 C → `sc_transfer/`로 분리
+## 실험 C → 별도 저장소로 이동
 
-구조적 커넥톰 복원 실험은 독립 프로젝트가 되었습니다. 설계와 방법론은 [sc_transfer/README.md](../sc_transfer/README.md)와 [sc_transfer/docs/methodology_transferability.md](../sc_transfer/docs/methodology_transferability.md)를 보세요.
+구조적 커넥톰 복원 실험은 [StructuralConnectomeTransfer](https://github.com/as9864/StructuralConnectomeTransfer)로 옮겼습니다. 설계와 방법론은 그 저장소의 README와 `docs/methodology_transferability.md`를 보세요.
 
 ## 공통 설계 결정 이유
 

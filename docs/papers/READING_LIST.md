@@ -1,6 +1,6 @@
 # 배경 논문 읽기 목록
 
-이 저장소의 네 실험(`reservoir_experiment`, `flyhash_experiment`, `sc_transfer`, `robot_experiment`)과 관련된 배경 논문을 실험별로 모은 목록입니다.
+이 저장소의 네 실험(`reservoir_experiment`, `flyhash_experiment`, [StructuralConnectomeTransfer](https://github.com/as9864/StructuralConnectomeTransfer), `robot_experiment`)과 관련된 배경 논문을 실험별로 모은 목록입니다.
 
 - ⭐ = 먼저 읽을 논문
 - `[ ]` → 다 읽으면 `[x]`로 바꿔서 진행 상황을 기록하세요
@@ -15,7 +15,7 @@
 | 읽음 | 논문 | 관련 코드 |
 | --- | --- | --- |
 | [ ] | ⭐ Bullmore & Sporns (2009). Complex brain networks: graph theoretical analysis of structural and functional systems. *Nat Rev Neurosci* | 저장소 전체 (네트워크 신경과학 입문) |
-| [ ] | Rubinov & Sporns (2010). Complex network measures of brain connectivity: uses and interpretations. *NeuroImage* | `sc_transfer/sctransfer/topology.py` (지표 정의, Brain Connectivity Toolbox) |
+| [ ] | Rubinov & Sporns (2010). Complex network measures of brain connectivity: uses and interpretations. *NeuroImage* | StructuralConnectomeTransfer의 `sctransfer/topology.py` (지표 정의, Brain Connectivity Toolbox) |
 | [ ] | ⭐ Maslov & Sneppen (2002). Specificity and stability in topology of protein networks. *Science* | `reservoir_experiment/connectome.py`의 `degree_null` (차수 보존 재배선) |
 | [ ] | Chen, Hall & Chklovskii (2006). Wiring optimization can relate neuronal structure and function. *PNAS* 103(12) | `data_sources/celegans_multiplex` (데이터셋 인용 요구 논문) |
 | [ ] | De Domenico, Porter & Arenas (2015). MuxViz: a tool for multilayer analysis and visualization of networks. *J Complex Networks* 3(2) | `data_sources/celegans_multiplex` (데이터셋 인용 요구 논문) |
@@ -52,7 +52,7 @@
 | [ ] | Charikar (2002). Similarity estimation techniques from rounding algorithms. *STOC* | `simhash_baseline` |
 | [ ] | Ryali et al. (2020). Bio-inspired hashing for unsupervised similarity search. *ICML* | FlyHash 후속 연구 (BioHash) |
 
-## 3. SC 복원 — `sc_transfer/sctransfer/`, `sc_transfer/docs/proposal.md`
+## 3. SC 복원 — [StructuralConnectomeTransfer](https://github.com/as9864/StructuralConnectomeTransfer) (이 절의 최신판은 그 저장소의 `docs/papers/`에 있습니다)
 
 ### 3.1 구조-기능 결합 (SC-FC coupling)
 
@@ -97,7 +97,7 @@
 
 ### 3.2b 전이 가능성 분석(A 방향)의 방법론 근거
 
-정규화·밀도·측정 방식 문제를 다루는 논문입니다. 서지 정보는 웹 검색으로 확인했고, 설명은 [methodology_transferability.md](../../sc_transfer/docs/methodology_transferability.md)에 있습니다.
+정규화·밀도·측정 방식 문제를 다루는 논문입니다. 서지 정보는 웹 검색으로 확인했고, 설명은 [methodology_transferability.md](https://github.com/as9864/StructuralConnectomeTransfer/blob/main/docs/methodology_transferability.md)에 있습니다.
 
 | 읽음 | 논문 | 관련 코드 |
 | --- | --- | --- |
@@ -154,7 +154,7 @@
 
 ## 확인 필요 항목
 
-제안서(`sc_transfer/docs/proposal.md`, `sc_transfer/docs/proposal.docx`)와 대조하며 찾은 인용 문제입니다. 1–3번은 웹 검색으로 서지 정보를 확인한 뒤 제안서에 반영했습니다.
+제안서(StructuralConnectomeTransfer의 `docs/proposal.md`, `docs/proposal.docx`)와 대조하며 찾은 인용 문제입니다. 1–3번은 웹 검색으로 서지 정보를 확인한 뒤 제안서에 반영했습니다.
 
 1. ~~**"89% / 99%" 수치의 출처**~~ → **수정 완료**: *Brain Struct Funct*의 GNN 논문은 Neudorf, Kress & Borowsky (2022)입니다. Sarwar et al. (2021)은 *NeuroImage*에 실린 별개 논문이라 따로 인용했습니다. 논문 버전(bioRxiv/출판본)에 따라 보고된 수치가 다를 수 있으니, 인용 전에 출판본의 수치를 다시 확인하세요.
 2. ~~**Zhang, L. et al. (2024), *Network Neuroscience***~~ → **수정 완료**: 실제 저자는 Zalesky, Sarwar, Tian, Liu, Yeo & Ramamohanarao (2024)입니다. 이 논문은 FC→SC 역방향이 아니라 **SC→FC 개인 수준 예측**을 평가한 논문이라, 제안서 3.1절의 해당 문장도 내용에 맞게 고쳤습니다.

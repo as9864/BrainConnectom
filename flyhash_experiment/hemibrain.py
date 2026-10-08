@@ -7,7 +7,8 @@ This module turns that export into data_sources/hemibrain/pn_kc.npz -
 projection neuron -> Kenyon cell synapse counts, flyhash_experiment's "real"
 PN->KC wiring - committed so the experiment keeps running offline.
 (Neuropil circuit subgraphs used to live here too; they moved with the
-structural-connectome project to sc_transfer/sctransfer/hemibrain.py.)
+structural-connectome project to the StructuralConnectomeTransfer
+repository, sctransfer/hemibrain.py.)
 
 Regenerate them from the public export with:
     python -m flyhash_experiment.hemibrain --build

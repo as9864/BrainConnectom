@@ -25,7 +25,7 @@
 **Rubinov & Sporns (2010), Complex network measures of brain connectivity** — *NeuroImage*
 - 질문: 뇌 네트워크 지표를 어떻게 정의하고 해석해야 하는가?
 - 핵심: 클러스터링, 경로 길이, 모듈성, 중심성 등의 정의와 가중/방향 그래프 버전을 정리했습니다. Brain Connectivity Toolbox(BCT)의 기반 논문입니다.
-- 여기서: `sc_transfer/sctransfer/topology.py`에 구현한 지표들이 표준 정의와 맞는지 확인할 때 봅니다.
+- 여기서: StructuralConnectomeTransfer의 `sctransfer/topology.py`에 구현한 지표들이 표준 정의와 맞는지 확인할 때 봅니다.
 
 **Maslov & Sneppen (2002), Specificity and stability in topology of protein networks** — *Science*
 - 질문: 관측된 네트워크 패턴이 차수 분포만으로 설명되는가, 아니면 그 이상의 구조인가?
@@ -138,7 +138,7 @@
 **Scheffer et al. (2020), A connectome and analysis of the adult Drosophila central brain** — *eLife*
 - 질문: 성체 초파리 중심 뇌의 커넥톰을 만들 수 있는가?
 - 핵심: 약 2만 5천 개 뉴런, 약 2천만 개 연결의 hemibrain 커넥톰을 공개했습니다. 세포 유형 정의와 neuPrint 공개 도구도 함께 나왔습니다.
-- 여기서: neuPrint 연동과 `sc_transfer`의 초파리 회로 서브그래프 데이터 소스입니다.
+- 여기서: neuPrint 연동과 StructuralConnectomeTransfer의 초파리 회로 서브그래프 데이터 소스입니다.
 
 **Dorkenwald et al. (2024), Neuronal wiring diagram of an adult brain** — *Nature*
 - 질문: 초파리 성체 뇌 전체(양반구)의 커넥톰은?
