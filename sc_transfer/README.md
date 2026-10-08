@@ -2,7 +2,7 @@
 
 선충(*C. elegans*)과 초파리(*Drosophila*) 커넥톰에서 보이는 배선 원리(모듈성, 클러스터링, 리치클럽, 허브 구조)가, **규모와 측정 방식의 차이를 보정한 뒤** 인간 구조적 커넥톰(SC)에 정량적으로 얼마나 옮겨 가는지 검증하는 프로젝트입니다. 응용 과제로 기능적 커넥톰(FC)에서 SC를 복원하는 문제에서 이 원리들이 prior로서 쓸모 있는지도 봅니다.
 
-> 원래 [BrainConnectom](../) 저장소의 `sc_prior_experiment`였던 것을 독립 프로젝트로 분리했습니다. 다른 실험(리저버, FlyHash, 로봇)에 의존하지 않고 이 폴더만으로 실행됩니다.
+> 원래 [BrainConnectom](https://github.com/as9864/BrainConnectom) 저장소의 `sc_prior_experiment`였던 것을 독립 프로젝트로 분리했습니다. 다른 실험(리저버, FlyHash, 로봇)에 의존하지 않고 이 폴더만으로 실행됩니다.
 
 ## 한눈에 보기
 
