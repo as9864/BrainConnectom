@@ -1,7 +1,7 @@
 # 방향 A: 종간 배선 원리는 정량적으로 어디까지 옮겨 가는가
 
-`sc_prior_experiment`의 주 방향을 바꾼 이유, 새 질문에 필요한 배경 지식, 구현한 방법, 현재 결과를 정리한 문서입니다.
-코드는 `sc_prior_experiment/normalized.py`와 `sc_prior_experiment/run_transfer.py`입니다.
+`sctransfer`의 주 방향을 바꾼 이유, 새 질문에 필요한 배경 지식, 구현한 방법, 현재 결과를 정리한 문서입니다.
+코드는 `sctransfer/normalized.py`와 `sctransfer/run_transfer.py`입니다.
 
 > 4.1~4.5절은 **합성 인간 코호트** 결과로, 방법 검증용입니다. **4.6~4.7절은 실제 HCP 집단 평균 SC** 결과입니다. 개인별 HCP 데이터를 쓰는 2부(효용)는 아직 데이터가 필요합니다([hcp_data_guide.md](hcp_data_guide.md)).
 
@@ -128,7 +128,7 @@
 
 ## 4. 현재 결과 (합성 인간 코호트, 원래 밀도)
 
-`python -m sc_prior_experiment.run_transfer --n-subjects 60`, 약 4분 소요.
+`python -m sctransfer.run_transfer --n-subjects 60`, 약 4분 소요.
 
 ### 4.1 1부: 정규화 통계 (1 = 무작위)
 
@@ -186,7 +186,7 @@
 
 ### 4.4 밀도 맞춤 민감도 분석 (d = 0.04)
 
-`python -m sc_prior_experiment.run_transfer --n-subjects 60 --density 0.04`. 모든 그래프를 가장 강한 연결 기준으로 밀도 4%에 맞췄습니다. 원래 4%보다 성긴 측각·외측 복합체는 빠졌고, 버섯체는 부분 그래프 9개 중 2개만 남았습니다.
+`python -m sctransfer.run_transfer --n-subjects 60 --density 0.04`. 모든 그래프를 가장 강한 연결 기준으로 밀도 4%에 맞췄습니다. 원래 4%보다 성긴 측각·외측 복합체는 빠졌고, 버섯체는 부분 그래프 9개 중 2개만 남았습니다.
 
 | 통계 | 무척추동물 | 인간 (합성) | 무작위 대비 같은 방향? |
 | --- | --- | --- | --- |
@@ -212,7 +212,7 @@
 
 ### 4.6 실제 HCP 데이터 결과 (집단 평균, 1부)
 
-`python -m sc_prior_experiment.run_transfer --human hcp_group` (`--density 0.04` 포함). 인간 쪽에 합성 코호트 대신 **실제 HCP 집단 평균 SC**(ENIGMA Toolbox, 6개 뇌 영역 지도)를 넣었습니다. 지도마다 원본 1개와 80% 노드 부분 그래프 8개를 써서 무척추동물과 같은 방식으로 표본을 만들었습니다. 개인별 데이터가 없어서 2부(효용)는 아직 돌릴 수 없습니다.
+`python -m sctransfer.run_transfer --human hcp_group` (`--density 0.04` 포함). 인간 쪽에 합성 코호트 대신 **실제 HCP 집단 평균 SC**(ENIGMA Toolbox, 6개 뇌 영역 지도)를 넣었습니다. 지도마다 원본 1개와 80% 노드 부분 그래프 8개를 써서 무척추동물과 같은 방식으로 표본을 만들었습니다. 개인별 데이터가 없어서 2부(효용)는 아직 돌릴 수 없습니다.
 
 **원래 밀도** (인간 SC 밀도는 지도에 따라 6~31%)
 

@@ -1,4 +1,8 @@
-"""Does a cross-species topological prior (learned from C. elegans + fly
+"""PILOT (original framing, kept for reference). Superseded by run_transfer.py:
+an oracle check showed graph-level priors cannot move edge-level accuracy,
+see docs/methodology_transferability.md section 1.
+
+Does a cross-species topological prior (learned from C. elegans + fly
 structural connectomes) improve reconstruction of a human structural
 connectome from a human functional connectome, relative to a plain
 supervised baseline?
@@ -6,9 +10,9 @@ supervised baseline?
 Three conditions are compared on held-out synthetic subjects (see
 human_data.py for why the human data is synthetic in this 2-week pilot):
   1. baseline   - Ridge regression FC -> SC, no prior
-  2. null_prior - baseline blended toward a *degree-preserving-rewired*
+  2. null_prior - baseline blended toward an Erdos-Renyi-randomized
                   version of the same invertebrate graphs (negative control:
-                  regularization from a non-biological, degree-matched target)
+                  regularization from a non-biological target)
   3. bio_prior  - baseline blended toward the real cross-species topological
                   prior
 
@@ -17,7 +21,7 @@ improvement is really coming from conserved biological structure and not
 just "any regularization toward a plausible-looking target".
 
 Usage:
-    python -m sc_prior_experiment.run_experiment --n-subjects 60
+    python -m sctransfer.run_pilot --n-subjects 60
 """
 import argparse
 from pathlib import Path
@@ -26,12 +30,12 @@ import numpy as np
 import pandas as pd
 from scipy.stats import pearsonr
 
-from sc_prior_experiment import human_data, decoder
-from sc_prior_experiment.invertebrate_prior import build_prior
-from sc_prior_experiment.topology import topology_signature
-from reservoir_experiment.connectome import rescale_spectral_radius
-from reservoir_experiment.reservoir import LeakyESN
-from reservoir_experiment import tasks
+from sctransfer import human_data, decoder
+from sctransfer.invertebrate_prior import build_prior
+from sctransfer.topology import topology_signature
+from sctransfer.celegans import rescale_spectral_radius
+from sctransfer.reservoir import LeakyESN
+from sctransfer import tasks
 
 RESULTS_DIR = Path(__file__).resolve().parent.parent / "results"
 SHARED_STATS = ["modularity", "rich_club", "strength_mean", "strength_std", "clustering"]
@@ -55,7 +59,7 @@ def topology_distance(pred, true):
 def functional_validity_check(pred_sc, true_sc, target_rho=0.9, seed=0):
     """Cross-check: do reservoirs built from the *predicted* SC show similar
     computational properties (memory capacity, NARMA-10) to reservoirs built
-    from the *true* SC? Reuses the reservoir_experiment benchmark suite
+    from the *true* SC? Reuses the reservoir benchmark suite (reservoir.py, tasks.py)
     unchanged.
     """
     results = {}

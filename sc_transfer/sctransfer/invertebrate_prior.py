@@ -10,10 +10,9 @@ biology.
 """
 import numpy as np
 
-from reservoir_experiment.connectome import build_weight_matrix as celegans_weight_matrix
-from flyhash_experiment import hemibrain
-from flyhash_experiment.connectome import biased_synthetic_connectivity, try_fetch_real_connectivity
-from sc_prior_experiment.topology import (
+from sctransfer.celegans import build_weight_matrix as celegans_weight_matrix
+from sctransfer import hemibrain
+from sctransfer.topology import (
     topology_signature,
     subsample_subgraph,
     erdos_renyi_null,
@@ -27,40 +26,13 @@ SUBSAMPLE_FRAC = 0.8
 FLY_SUBGRAPH_NODES = 300
 
 
-def _embed_bipartite(W_kc_pn):
-    """Embed a (n_kc, n_pn) PN->KC matrix into a square adjacency so the
-    generic topology functions can operate on it. Clustering is excluded
-    downstream for this source since a bipartite graph has zero triangles
-    by construction - that's a property of the graph type, not a bug.
-    """
-    n_kc, n_pn = W_kc_pn.shape
-    n = n_kc + n_pn
-    square = np.zeros((n, n))
-    square[n_pn:, :n_pn] = W_kc_pn  # KC rows, PN cols
-    return square
-
-
-def _fly_pn_kc_graph():
-    """Legacy fly source: the bipartite PN->KC matrix. Only used when the
-    hemibrain circuit files are missing."""
-    real = try_fetch_real_connectivity()
-    if real is not None:
-        return real, "real_hemibrain_pn_kc"
-    return biased_synthetic_connectivity(seed=0), "biased_synthetic_pn_kc"
-
-
 def _fly_corpus(seed_offset):
-    """Biological and null signatures for the fly. Prefers real hemibrain
-    circuits (non-bipartite, so clustering is meaningful); falls back to the
-    bipartite PN->KC matrix without clustering if the circuit files are absent.
-    """
+    """Biological and null signatures for the fly, from the real hemibrain
+    circuits in data/hemibrain/circuits/ (non-bipartite, so clustering is
+    meaningful)."""
     circuits = hemibrain.available_circuits()
     if not circuits:
-        W_raw, source = _fly_pn_kc_graph()
-        print(f"[invertebrate_prior] fly: {W_raw.shape} PN->KC ({source}); "
-              "hemibrain circuits not found, see flyhash_experiment/hemibrain.py")
-        bio, null = _corpus_from_base(_embed_bipartite(W_raw), seed_offset, include_clustering=False)
-        return bio, null
+        raise FileNotFoundError("data/hemibrain/circuits/ is empty - run `python -m sctransfer.hemibrain --build`")
 
     bio, null = [], []
     for c, name in enumerate(circuits):
@@ -125,9 +97,7 @@ def _aggregate(species_signatures):
 def build_prior(seed=0):
     """Returns (bio_prior, null_prior), each {stat_name: {mean, std}}.
 
-    Species are weighted equally (see _aggregate). With the hemibrain circuit
-    files present both species contribute every statistic; in the PN->KC
-    fallback the fly contributes no clustering (bipartite, so no triangles).
+    Species are weighted equally (see _aggregate).
     """
     celegans_W = celegans_weight_matrix()
     print(f"[invertebrate_prior] C. elegans: {celegans_W.shape[0]} neurons (real chemical synapse connectome)")

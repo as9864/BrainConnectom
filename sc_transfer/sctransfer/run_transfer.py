@@ -22,10 +22,10 @@ is the fraction of the oracle's gain over the null the invertebrate prior
 recovers (1 = as good as knowing the answer, 0 = no better than random).
 
 Usage:
-    python -m sc_prior_experiment.run_transfer --n-subjects 60
-    python -m sc_prior_experiment.run_transfer --density 0.04   # density-matched sensitivity run
-    python -m sc_prior_experiment.run_transfer --human hcp_group   # real HCP group SC, Part 1 only
-    python -m sc_prior_experiment.run_transfer --human hcp_cohort --hcp-cohort path/to/cohort.npz
+    python -m sctransfer.run_transfer --n-subjects 60
+    python -m sctransfer.run_transfer --density 0.04   # density-matched sensitivity run
+    python -m sctransfer.run_transfer --human hcp_group   # real HCP group SC, Part 1 only
+    python -m sctransfer.run_transfer --human hcp_cohort --hcp-cohort path/to/cohort.npz
 """
 import argparse
 from pathlib import Path
@@ -33,13 +33,13 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from flyhash_experiment import hemibrain
-from reservoir_experiment.connectome import build_weight_matrix as celegans_weight_matrix
-from sc_prior_experiment import decoder, hcp_data, human_data
-from sc_prior_experiment import normalized as N
-from sc_prior_experiment.invertebrate_prior import FLY_SUBGRAPH_NODES, N_SUBSAMPLES_PER_GRAPH, SUBSAMPLE_FRAC
-from sc_prior_experiment.run_experiment import edge_correlation
-from sc_prior_experiment.topology import erdos_renyi_null, subsample_subgraph
+from sctransfer import hemibrain
+from sctransfer.celegans import build_weight_matrix as celegans_weight_matrix
+from sctransfer import decoder, hcp_data, human_data
+from sctransfer import normalized as N
+from sctransfer.invertebrate_prior import FLY_SUBGRAPH_NODES, N_SUBSAMPLES_PER_GRAPH, SUBSAMPLE_FRAC
+from sctransfer.run_pilot import edge_correlation
+from sctransfer.topology import erdos_renyi_null, subsample_subgraph
 
 RESULTS_DIR = Path(__file__).resolve().parent.parent / "results"
 CANDIDATE_DENSITIES = [0.06, 0.08, 0.10, 0.12, 0.15]

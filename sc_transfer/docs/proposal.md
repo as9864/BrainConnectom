@@ -2,7 +2,7 @@
 
 제출자: 한승엽 · 제출일: 2026년 9월 17일
 
-*(`docs/proposal.docx`의 내용을 마크다운으로 옮긴 사본입니다. `sc_prior_experiment/`의 원 제안서.)*
+*(`docs/proposal.docx`의 내용을 마크다운으로 옮긴 사본입니다. 제출 당시 문서라 내용은 그대로 두었습니다. 본문의 경로(`sc_prior_experiment/`, `reservoir_experiment` 등)는 원래 BrainConnectom 저장소 구조 기준이며, 이 프로젝트에서는 `sctransfer/`에 해당합니다. 이후 연구 방향은 [methodology_transferability.md](methodology_transferability.md)에서 바뀌었습니다.)*
 
 ## 1. 연구 배경 및 필요성
 

@@ -6,7 +6,7 @@
    consensus thresholding and log-transformed; FC as the group mean of
    z-transformed resting-state correlations, negatives set to 0 - for six
    cortical parcellations. `load_group_connectome()` downloads them into the
-   gitignored data_sources/hcp_enigma/ cache on first use. One matrix per
+   gitignored data/hcp_enigma/ cache on first use. One matrix per
    parcellation, so these support descriptive comparisons, not per-subject
    FC->SC decoding.
 
@@ -26,7 +26,7 @@ import numpy as np
 
 ENIGMA_URL = ("https://raw.githubusercontent.com/MICA-MNI/ENIGMA/master/"
               "enigmatoolbox/datasets/matrices/hcp_connectivity/")
-CACHE_DIR = Path(__file__).resolve().parent.parent / "data_sources" / "hcp_enigma" / "raw"
+CACHE_DIR = Path(__file__).resolve().parent.parent / "data" / "hcp_enigma" / "raw"
 PARCELLATIONS = {  # name -> ENIGMA file suffix
     "aparc": "",  # Desikan-Killiany, 68 cortical regions
     "schaefer_100": "_schaefer_100",

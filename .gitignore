@@ -4,5 +4,3 @@ __pycache__/
 results/
 .env
 data_sources/hemibrain/raw/
-data_sources/hcp_enigma/raw/
-data_sources/hcp/

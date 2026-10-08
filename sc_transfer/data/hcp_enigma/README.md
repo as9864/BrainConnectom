@@ -1,6 +1,6 @@
 # Human Connectome Project — group-average connectomes (via ENIGMA Toolbox)
 
-Nothing in this folder is committed except this README. `sc_prior_experiment/hcp_data.py`
+Nothing in this folder is committed except this README. `sctransfer/hcp_data.py`
 downloads the matrices into the gitignored `raw/` subfolder on first use.
 
 - **Source**: ENIGMA Toolbox, `enigmatoolbox/datasets/matrices/hcp_connectivity/` in

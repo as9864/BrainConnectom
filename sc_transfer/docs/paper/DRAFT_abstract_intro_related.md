@@ -1,6 +1,6 @@
 # 논문 초안 뼈대: Abstract · Introduction · Related Work
 
-> **대상 논문**: `sc_prior_experiment` / [제안서](../proposal.md) — 종간 보존 위상 통계를 prior로 쓰는 FC→SC 복원
+> **대상 논문**: `sctransfer` / [제안서](../proposal.md) — 종간 보존 위상 통계를 prior로 쓰는 FC→SC 복원
 > **상태**: 아이디어 정리용 초안입니다. `[[ ]]` 안은 실험 결과가 나오면 채울 자리입니다.
 > **참고**: 인용은 [READING_LIST.md](../papers/READING_LIST.md)에 정리한 논문 기준이고, 요약은 [SUMMARIES.md](../papers/SUMMARIES.md)에 있습니다.
 
@@ -145,11 +145,11 @@
 
 현재 코드와 위 초안이 주장하는 내용 사이에 차이가 있습니다. 투고 전에 코드를 초안에 맞추거나, 초안을 코드에 맞춰 낮춰야 합니다.
 
-| 초안의 주장 | 현재 구현 (`sc_prior_experiment/`) | 해야 할 일 |
+| 초안의 주장 | 현재 구현 (`sctransfer/`) | 해야 할 일 |
 | --- | --- | --- |
 | 모듈성·리치클럽·클러스터링 등 **다변량** prior | `decoder.py`는 **노드 강도 CV(허브 불균등도) 하나만** 사용 | 다변량 prior로 확장하거나, 논문을 "허브 구조 prior"로 좁히기 |
 | prior를 **손실 항**으로 결합해 학습 | Ridge 예측 **이후 후처리 reshape** (`alpha_blend`) | 학습 중 정규화로 바꾸거나, "post-hoc projection"으로 정직하게 서술 |
-| ~~초파리 **실측** 커넥톰~~ ✅ | hemibrain v1.2 회로 5개(버섯체·중심복합체·측각·더듬이엽·외측 복합체)의 실측 연결을 사용 (`data_sources/hemibrain/`) | 완료. 논문 Methods에 회로 정의(ROI 목록), 시냅스 3개 이상 기준, 300-뉴런 서브그래프 샘플링을 명시 |
+| ~~초파리 **실측** 커넥톰~~ ✅ | hemibrain v1.2 회로 5개(버섯체·중심복합체·측각·더듬이엽·외측 복합체)의 실측 연결을 사용 (`data/hemibrain/`) | 완료. 논문 Methods에 회로 정의(ROI 목록), 시냅스 3개 이상 기준, 300-뉴런 서브그래프 샘플링을 명시 |
 | 인간 HCP 데이터 | 합성 코호트 (`human_data.py`) | `load_hcp_cohort()` 구현 |
 | 그래프 VAE로 분포 학습 (제안서) | 통계의 평균과 표준편차만 집계 | 논문에서는 "경험적 분포"로 서술하거나 VAE 구현 |
 | 개인 수준 개선 | 기준선이 Ridge 하나뿐 | **집단 평균 SC 기준선**(Zalesky 권고)과 **MGCN-GAN 비교** 추가 |

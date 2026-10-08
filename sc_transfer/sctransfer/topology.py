@@ -13,7 +13,7 @@ import numpy as np
 # Reuse the degree-preserving null model from the reservoir experiment instead
 # of reimplementing it - same rewiring logic applies to any weighted directed
 # or undirected matrix.
-from reservoir_experiment.connectome import null_model_degree_preserving, null_model_erdos_renyi
+from sctransfer.celegans import null_model_degree_preserving, null_model_erdos_renyi
 
 
 def _to_undirected_graph(W):

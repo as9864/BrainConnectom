@@ -4,7 +4,7 @@
 
 1. **conn2res 스타일 리저버 컴퓨팅** — 실제 예쁜꼬마선충(C. elegans) 커넥톰이 같은 크기·밀도·스펙트럴 반지름의 무작위 그래프보다 더 나은 "리저버"가 되는가? (`reservoir_experiment/`)
 2. **실제 배선을 반영한 FlyHash** — 초파리 후각회로 기반 유사도 해싱(FlyHash)에서, 이상화된 균등 무작위 연결 대신 생물학적으로 편향된(비균등) PN→Kenyon cell 연결을 쓰면 최근접 이웃 검색 성능이 달라지는가? (`flyhash_experiment/`)
-3. **종간 보존된 위상학적 사전정보로 인간 구조적 커넥톰 복원** — C. elegans·초파리 구조적 커넥톰에서 뽑아낸 "종을 초월해 보존된 배선 통계"가, 인간 기능적 커넥톰(FC)만으로 구조적 커넥톰(SC)을 복원하는 문제에 도움이 되는가? (`sc_prior_experiment/`, 2주 파일럿 스프린트로 진행 중 — 제안서는 [docs/proposal.docx](docs/proposal.docx))
+3. **종간 보존된 위상학적 사전정보로 인간 구조적 커넥톰 복원** — C. elegans·초파리 구조적 커넥톰에서 뽑아낸 "종을 초월해 보존된 배선 통계"가, 인간 기능적 커넥톰(FC)만으로 구조적 커넥톰(SC)을 복원하는 문제에 도움이 되는가? → **독립 프로젝트 [`sc_transfer/`](sc_transfer/)로 분리했습니다** (지금은 "종간 배선 원리가 인간 뇌로 얼마나 옮겨 가는가"로 질문이 바뀜)
 
 세 실험 모두 별도 다운로드 없이 그 자리에서 바로 실행됩니다. 원래 참고했던 `conn2res` 툴박스는 직접 의존성으로 쓰지 않습니다 — Python 3.8/3.9 시절 패키지(`gym==0.21.0`, `numpy==1.22`)에 고정돼 있어서 최신 Python/setuptools에서는 빌드 자체가 안 됩니다. 그래서 이 저장소의 리저버 컴퓨팅 파이프라인은 같은 아이디어(실제 커넥톰 → 고정 리저버 가중치 → 선형 readout만 학습)를 처음부터 가볍게 재구현한 것입니다. 원 논문: https://www.nature.com/articles/s41467-024-44900-4
 
@@ -39,7 +39,7 @@ python -m reservoir_experiment.run_experiment --n-trials 20
 
 결과: `results/reservoir_results.csv` (트라이얼별 원본 수치), `results/reservoir_comparison.png` (오차막대 포함 막대그래프).
 
-**확장 아이디어**: 다른 뉴런 서브셋/레이어 사용(화학 시냅스 대신 전기 갭 정션), 더 큰 커넥톰으로 교체(`data_sources/hemibrain/circuits/`의 초파리 회로, CAVE/MICrONS로 마우스 피질), reciprocity나 거리 의존성을 보존하는 다른 널 모델 시도 등.
+**확장 아이디어**: 다른 뉴런 서브셋/레이어 사용(화학 시냅스 대신 전기 갭 정션), 더 큰 커넥톰으로 교체(hemibrain의 초파리 회로, CAVE/MICrONS로 마우스 피질), reciprocity나 거리 의존성을 보존하는 다른 널 모델 시도 등.
 
 ## 2. FlyHash (`flyhash_experiment/`)
 
@@ -67,48 +67,9 @@ neuPrint 토큰(`.env`의 `NEUPRINT_TOKEN`)은 이 파일이 없을 때만 대�
 
 **여기가 실제로 아직 명확히 답이 안 나온 연구 질문입니다**: 초파리의 실제 배선(비균등)이 원 논문에서 이론적으로 분석한 이상화된 균등 무작위 모델보다 해시 품질 면에서 유리한지 불리한지는 아직 잘 다뤄지지 않았습니다. 실제 데이터를 연동한 뒤에는 `FlyHash`의 `wta_sparsity`를 바꿔보거나, `digits` 대신 더 고차원인 데이터(예: 문장 임베딩)로 바꿔서 입력 차원에 따라 효과가 달라지는지도 확인해볼 만합니다.
 
-## 3. 구조적 커넥톰 복원 (`sc_prior_experiment/`)
+## 3. 구조적 커넥톰 복원 → [`sc_transfer/`](sc_transfer/)로 분리
 
-**핵심 질문**: 인간 기능적 커넥톰(FC, resting-state fMRI 상관행렬)만으로 구조적 커넥톰(SC, 백질 배선)을 복원하는 문제는 근본적으로 ill-posed(불량조건) 역문제입니다. C. elegans·초파리처럼 규모가 전혀 다른 신경계에서도 모듈성·리치클럽·배선 경제성 같은 위상학적 성질이 종을 초월해 보존된다는 비교 커넥톰믹스 연구 결과를, 이 역문제를 정규화하는 생물학적 사전분포(prior)로 쓸 수 있을까요? 자세한 연구 배경과 방법론은 [docs/proposal.docx](docs/proposal.docx) 제안서를 참고하세요.
-
-```bash
-python -m sc_prior_experiment.run_experiment --n-subjects 60
-```
-
-세 조건을 비교합니다 (전부 같은 베이스라인 디코더에서 출발, 순수하게 "정규화 방식"만 다르게):
-- `baseline` — FC→SC Ridge 회귀 디코더, 정규화 없음
-- `null_prior` — C. elegans·초파리 커넥톰의 **Erdos-Renyi 무작위화 버전**으로 만든 통계를 향해 정규화 (부정 대조군: "그럴듯해 보이는 아무 정규화"의 효과만 분리)
-- `bio_prior` — 실제 C. elegans 커넥톰과 초파리 hemibrain 회로 5개(버섯체, 중심복합체, 측각, 더듬이엽, 외측 복합체)의 실측 구조적 커넥톰(+ 서브그래프 표본 증강)에서 뽑은 **종간 보존 위상 통계**(모듈성, 리치클럽, 클러스터링, 노드 강도 분포의 불균등도)를 향해 정규화
-
-인간 SC-FC 데이터는 기본값으로 **합성(synthetic) 코호트**를 씁니다(`human_data.py`). 실제 HCP 데이터는 아래 3-A의 `run_transfer.py`에서 쓸 수 있습니다 — 모듈 구조를 가진 SC 템플릿에서 개인별 변이를 주고, 그 위에서 단순 동역학을 굴려 FC를 시뮬레이션합니다. `make_cohort()`와 동일한 인터페이스(`{"sc":.., "fc":..}` 리스트)를 지키는 `load_hcp_cohort()`로 나중에 그대로 교체할 수 있도록 설계했습니다.
-
-평가는 세 갈래로:
-- **엣지 단위 정확도** — 예측 SC와 실제 SC 상삼각 벡터의 피어슨 상관계수
-- **위상 통계 거리** — 모듈성·리치클럽·클러스터링·노드강도 분포의 (실제 SC 대비) 상대오차 합
-- **기능적 타당성 교차검증** — 예측 SC를 `reservoir_experiment`의 리저버·벤치마크 파이프라인에 그대로 태워, 실제 SC로 얻는 메모리 용량·NARMA-10 성능과 비슷한 계산적 특성을 재현하는지 확인 (기존 실험 코드 재사용)
-
-결과: `results/sc_prior_results.csv`, `results/sc_prior_comparison.png`, `results/sc_prior_functional_check.csv`.
-
-**현재 알려진 한계 (정직하게 기록)**: 지금 합성 데이터로 돌려보면 `bio_prior`가 `baseline`보다 딱히 낫지 않습니다 — 합성 인간 코호트의 모듈 구조가 실제 생물학적 배선과 아무 관련이 없으니 당연한 결과입니다. 이 파일럿의 목적은 "효과를 이미 입증하는 것"이 아니라 **3단계 파이프라인이 실제로 끝까지 동작하고, 세 조건이 서로 다른 결과를 내는 것**(즉 정규화 메커니즘 자체는 작동한다는 것)을 확인하는 것입니다. 실제 신호 유무는 HCP 데이터 연동 이후에나 확인 가능합니다.
-
-### 3-A. 전이 가능성 분석 (`run_transfer.py`) — 현재 주 방향
-
-위 파일럿에서 "prior에 정답을 줘도 엣지 정확도가 오르지 않는다"는 것이 확인되어, 질문을 **"종을 넘어 보존된 배선 원리는 정량적으로 어디까지 옮겨 가는가?"**로 바꿨습니다. 자세한 배경·방법·결과는 [docs/methodology_transferability.md](docs/methodology_transferability.md)를 참고하세요.
-
-```bash
-python -m sc_prior_experiment.run_transfer --n-subjects 60                # 각 그래프의 원래 밀도
-python -m sc_prior_experiment.run_transfer --n-subjects 60 --density 0.04 # 밀도를 맞춘 민감도 분석
-```
-
-- 통계를 **널 모델 대비 비율**(1 = 무작위와 같음)로 바꿔 규모·밀도·측정 방식의 영향을 줄입니다 (`normalized.py`).
-- prior 출처를 **사다리**로 놓고 비교합니다: 널(하한) → 무척추동물 → 인간 학습 코호트 → 정답(oracle, 상한).
-- **전이 지수 TI** = (무척추동물 − 널) / (정답 − 널): 정답이 주는 이득 중 무척추동물 prior가 회수하는 비율.
-
-**실제 HCP 데이터**: `--human hcp_group`은 ENIGMA Toolbox의 HCP 집단 평균 SC(뇌 영역 지도 6종)를 자동으로 받아 1부를 돌립니다. 개인별 SC·FC 쌍이 있으면 `--human hcp_cohort --hcp-cohort <경로>`로 2부까지 돌릴 수 있습니다. 준비 방법과 HCP 약관은 [docs/hcp_data_guide.md](docs/hcp_data_guide.md)를 보세요.
-
-결과: `results/transfer_descriptive_*.csv`, `results/transfer_utility_*.csv`, `results/transfer_per_stat_*.csv`.
-
-**확장 아이디어**: `human_data.py`를 실제 HCP S1200 SC/FC 쌍으로 교체, `decoder.py`의 정규화를 강도 분포(CV) 외에 모듈성·클러스터링까지 포함한 다변량 손실항으로 확장, 유충 초파리 전뇌(Winding 2023)나 C. elegans 발달 단계별 커넥톰(Witvliet 2021)을 추가해 무척추동물 표본 수 늘리기.
+이 실험은 독립 프로젝트로 옮겼습니다. 코드, 데이터, 제안서, 논문 초안, 읽기 목록이 모두 `sc_transfer/` 안에 있고, 이 저장소의 다른 실험에 의존하지 않습니다. 시작은 [sc_transfer/README.md](sc_transfer/README.md)부터 보세요.
 
 ## 프로젝트 구조
 
@@ -120,26 +81,14 @@ reservoir_experiment/
   run_experiment.py - 메인 스크립트, results/*.csv 및 *.png 생성
 flyhash_experiment/
   connectome.py     - 이상화/합성편향/실측(hemibrain) PN-KC 배선
-  hemibrain.py      - hemibrain 공개 export → 실측 PN-KC 행렬·회로 서브그래프 생성/로딩
+  hemibrain.py      - hemibrain 공개 export → 실측 PN-KC 행렬 생성/로딩
   flyhash.py         - FlyHash, SimHash 구현
   run_experiment.py - 메인 스크립트, results/*.csv 및 *.png 생성
-sc_prior_experiment/
-  topology.py           - 그래프 위상 통계량(모듈성/리치클럽/클러스터링/강도) + 널 모델 재사용
-  invertebrate_prior.py - C. elegans·초파리 커넥톰에서 종간 위상 사전분포 추출
-  human_data.py         - 인간 SC-FC 합성 코호트 생성 (HCP 실데이터 연동 지점 명시)
-  decoder.py            - FC→SC 베이스라인 디코더 + 사전분포 정규화 변형
-  run_experiment.py     - 메인 스크립트, baseline/null_prior/bio_prior ablation, results/*.csv 및 *.png 생성
-  hcp_data.py           - 실제 HCP SC/FC 로더 (ENIGMA 집단 평균 자동 다운로드, 개인별 데이터는 직접 준비)
-  normalized.py         - 널 모델 대비 정규화 통계 (모듈성/클러스터링/리치클럽/차수 불균등도), 밀도 맞춤
-  run_transfer.py       - 전이 가능성 분석: 널→무척추동물→인간→정답 prior 사다리, 전이 지수(TI)
+sc_transfer/            - (분리됨) 종간 배선 원리 전이 가능성 프로젝트, 자체 README·CLAUDE.md
 data_sources/
   celegans_multiplex/ - 받아둔 커넥톰 데이터셋 (자체 README/LICENSE 포함)
-  hcp_enigma/         - HCP 집단 평균 SC/FC 캐시 (README만 커밋, HCP 약관 적용)
-  hemibrain/          - 초파리 hemibrain v1.2에서 뽑은 PN-KC·회로 연결 (자체 README, CC BY 4.0)
+  hemibrain/          - 초파리 hemibrain v1.2에서 뽑은 PN-KC 연결 (자체 README, CC BY 4.0)
 docs/
   ARCHITECTURE.md    - 아키텍처와 각 구성요소에 대한 상세 설명
-  hcp_data_guide.md  - HCP 실데이터(집단 평균·개인별) 준비 방법과 약관
-  methodology_transferability.md - 전이 가능성(A 방향) 배경 지식·방법론·결과
-  proposal.docx      - 실험 3(sc_prior_experiment)의 연구 제안서
   papers/            - 관련 논문 해설 (번역이 아닌, 읽고 재구성한 요약) + READING_LIST.md(배경 논문 읽기 목록), SUMMARIES.md(논문별 요약)
 ```

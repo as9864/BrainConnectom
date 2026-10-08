@@ -5,7 +5,7 @@ fMRI) connectome pairs need an account on ConnectomeDB and a preprocessing
 pipeline neither of which fit in a 2-week sprint. Instead this module
 generates a synthetic cohort with a modular, brain-like structural template
 and simulates functional connectivity from simple constrained dynamics on
-top of it, so the rest of the pipeline (decoder.py, run_experiment.py) can
+top of it, so the rest of the pipeline (decoder.py, run_pilot.py) can
 be built and validated end to end today.
 
 `make_cohort()` is the only function the rest of the pipeline depends on -
@@ -66,7 +66,7 @@ def perturb_individual_sc(group_sc, seed=0, edge_noise_sigma=0.25, drop_frac=0.0
 def simulate_fc_from_sc(SC, seed=0, n_timepoints=300, leak=0.4, noise_std=0.6):
     """Toy generative model of functional connectivity: constrained linear
     dynamics driven by the structural graph plus noise, in the same spirit
-    as the leaky-integrator reservoir used in reservoir_experiment/reservoir.py.
+    as the leaky-integrator reservoir in sctransfer/reservoir.py.
     This is a simplification of large-scale neural-mass models (e.g. linear
     models relating SC eigenmodes to BOLD covariance), good enough to give
     the pipeline a non-trivial, structurally-grounded SC->FC relationship to
@@ -106,7 +106,7 @@ def load_hcp_cohort(path, sc_is_log=False):
     """Real-data replacement for make_cohort(): per-subject HCP SC/FC pairs
     you obtained yourself (HCP requires each user to accept its data use
     terms). Same [{"sc":..., "fc":...}, ...] shape, so nothing else changes.
-    Formats and details: sc_prior_experiment/hcp_data.py.
+    Formats and details: sctransfer/hcp_data.py.
     """
-    from sc_prior_experiment.hcp_data import load_individual_cohort
+    from sctransfer.hcp_data import load_individual_cohort
     return load_individual_cohort(path, sc_is_log=sc_is_log)
