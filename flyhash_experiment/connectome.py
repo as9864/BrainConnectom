@@ -6,15 +6,19 @@
                       is configured: KC in-degree ~ Poisson(mean claws), and PNs
                       are NOT sampled uniformly (some PN types are wired to KCs
                       far more often than others, as reported in EM reconstructions).
-  real (neuprint)  - actual PN->KC synapse counts fetched from the hemibrain
-                      dataset via neuprint-python. Requires a free API token,
-                      see README.md for how to get one.
+  real (hemibrain) - actual PN->KC synapse counts from the hemibrain v1.2
+                      connectome. Read from data_sources/hemibrain/pn_kc.npz
+                      (derived from Janelia's public export, no token needed -
+                      see hemibrain.py); falls back to a live neuprint-python
+                      query only if that file is missing and a token is set.
 
 Every mode returns an (n_KC, n_PN) numpy array of non-negative weights.
 """
 import os
 
 import numpy as np
+
+from flyhash_experiment import hemibrain
 
 N_PN_DEFAULT = 50
 N_KC_DEFAULT = 2000
@@ -52,10 +56,17 @@ def biased_synthetic_connectivity(n_kc=N_KC_DEFAULT, n_pn=N_PN_DEFAULT, mean_cla
 
 
 def try_fetch_real_connectivity(n_pn_max=None):
-    """Fetch real PN->KC synapse counts from the hemibrain dataset via neuprint.
-    Returns None (and prints why) if no token is configured or the request fails,
-    so callers can fall back to `biased_synthetic_connectivity`.
+    """Real hemibrain PN->KC synapse counts: the committed offline copy first,
+    then a live neuprint query. Returns None (and prints why) if neither is
+    available, so callers can fall back to `biased_synthetic_connectivity`.
     """
+    W = hemibrain.load_pn_kc()
+    if W is not None:
+        if n_pn_max:
+            W = W[:, :n_pn_max]
+        print(f"[connectome] loaded real hemibrain PN->KC matrix (offline export): {W.shape}")
+        return W
+
     token = os.environ.get("NEUPRINT_TOKEN")
     if not token:
         print("[connectome] NEUPRINT_TOKEN not set - skipping real hemibrain fetch. "
